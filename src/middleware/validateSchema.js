@@ -3,10 +3,9 @@ import Joi from "joi";
 export default function validateSchema(schema) {
    
     return function (req, res, next) {
-        const a = Joi.string().validate();
-        const res = schema.validate(req.body);
+        const result = schema.validate(req.body, {abortEarly: false});
         
-        if(res.error) return res.status(422).send(res.error);
+        if(result.error) return res.status(422).send(result.error.details.map( c => c.message));
         next();
     }
 }

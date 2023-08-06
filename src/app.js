@@ -1,6 +1,7 @@
-import { Express, json } from "express"
+import Express from "express"
+import { json } from "express"
 import cors from "cors";
-import accountRouter from "./routes/account.routes";
+import accountRouter from "./routes/account.routes.js";
 
 const app = Express();
 

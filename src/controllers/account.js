@@ -1,4 +1,4 @@
-import { db } from "../database";
+import { db } from "../database.js";
 import bcrypt from "bcrypt";
 
 export async function Cadastro(req, res) {
@@ -6,7 +6,7 @@ export async function Cadastro(req, res) {
     const { name, email, password, confirmPassword } = req.body;
 
     try {
-        if(password == confirmPassword) return res.status(422).send("Passwords does not match!");
+        if(password !== confirmPassword) return res.status(422).send("Passwords does not match!");
 
         const emailSearch = await db.query("SELECT * FROM users WHERE email = $1", [email]);
         if(emailSearch.rowCount !== 0) return res.sendStatus(409);
