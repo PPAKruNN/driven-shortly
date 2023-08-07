@@ -33,7 +33,7 @@ export async function getUrlById(req, res ) {
         const { id } = req.params;
 
         const urlSearch = await db.query(`
-        SELECT id, shorturl, url
+        SELECT id, shorturl as "shortUrl", url
         FROM shortUrls
         WHERE id = $1; 
         `, [ id ])
