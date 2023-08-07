@@ -1,3 +1,4 @@
+import { v4 } from "uuid";
 import { db } from "../database.js";
 import bcrypt from "bcrypt";
 
@@ -31,4 +32,29 @@ export async function Cadastro(req, res) {
         console.log(error);
         res.sendStatus(500);
     }
+}
+
+export async function Login(req,res) {
+
+    try {
+        const { email, password } = req.body;
+        
+        const userSearch = await db.query(`SELECT id, passwordhash FROM users WHERE email = $1 `, [email]);
+        if(userSearch.rowCount === 0 ) return res.sendStatus(401);
+        if(!bcrypt.compareSync(password, userSearch.rows[0].passwordhash)) return res.sendStatus(401);
+
+        const token = v4();
+
+        await db.query(`
+        UPDATE sessions
+        SET token = $1
+        WHERE userid = $2
+        `, [token, userSearch.rows[0].id ]);
+
+        return res.status(200).send(token);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+
 }
