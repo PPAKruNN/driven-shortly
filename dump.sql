@@ -5,7 +5,7 @@
 -- Dumped from database version 14.8 (Ubuntu 14.8-0ubuntu0.22.04.1)
 -- Dumped by pg_dump version 14.8 (Ubuntu 14.8-0ubuntu0.22.04.1)
 
--- Started on 2023-08-07 04:00:51 -03
+-- Started on 2023-08-07 04:22:59 -03
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -23,18 +23,19 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- TOC entry 213 (class 1259 OID 16583)
+-- TOC entry 211 (class 1259 OID 16605)
 -- Name: sessions; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.sessions (
     userid integer NOT NULL,
-    token character varying(72)
+    token character varying(72),
+    createdat timestamp without time zone DEFAULT now()
 );
 
 
 --
--- TOC entry 212 (class 1259 OID 16567)
+-- TOC entry 213 (class 1259 OID 16617)
 -- Name: shorturls; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -43,12 +44,13 @@ CREATE TABLE public.shorturls (
     userid integer NOT NULL,
     visitcount integer DEFAULT 0 NOT NULL,
     shorturl character varying(21) NOT NULL,
-    url text NOT NULL
+    url text NOT NULL,
+    createdat timestamp without time zone DEFAULT now()
 );
 
 
 --
--- TOC entry 211 (class 1259 OID 16566)
+-- TOC entry 212 (class 1259 OID 16616)
 -- Name: shorturls_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -62,8 +64,8 @@ CREATE SEQUENCE public.shorturls_id_seq
 
 
 --
--- TOC entry 3377 (class 0 OID 0)
--- Dependencies: 211
+-- TOC entry 3380 (class 0 OID 0)
+-- Dependencies: 212
 -- Name: shorturls_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -71,7 +73,7 @@ ALTER SEQUENCE public.shorturls_id_seq OWNED BY public.shorturls.id;
 
 
 --
--- TOC entry 210 (class 1259 OID 16546)
+-- TOC entry 210 (class 1259 OID 16594)
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -79,12 +81,13 @@ CREATE TABLE public.users (
     id integer NOT NULL,
     name character varying(256) NOT NULL,
     email character varying(256) NOT NULL,
-    passwordhash character varying(72) NOT NULL
+    passwordhash character varying(72) NOT NULL,
+    createdat timestamp without time zone DEFAULT now()
 );
 
 
 --
--- TOC entry 209 (class 1259 OID 16545)
+-- TOC entry 209 (class 1259 OID 16593)
 -- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -98,7 +101,7 @@ CREATE SEQUENCE public.users_id_seq
 
 
 --
--- TOC entry 3378 (class 0 OID 0)
+-- TOC entry 3381 (class 0 OID 0)
 -- Dependencies: 209
 -- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -107,7 +110,7 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- TOC entry 3219 (class 2604 OID 16570)
+-- TOC entry 3221 (class 2604 OID 16620)
 -- Name: shorturls id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -115,7 +118,7 @@ ALTER TABLE ONLY public.shorturls ALTER COLUMN id SET DEFAULT nextval('public.sh
 
 
 --
--- TOC entry 3218 (class 2604 OID 16549)
+-- TOC entry 3218 (class 2604 OID 16597)
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -123,7 +126,7 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 
 --
--- TOC entry 3230 (class 2606 OID 16587)
+-- TOC entry 3229 (class 2606 OID 16610)
 -- Name: sessions sessions_token_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -132,7 +135,7 @@ ALTER TABLE ONLY public.sessions
 
 
 --
--- TOC entry 3226 (class 2606 OID 16575)
+-- TOC entry 3231 (class 2606 OID 16626)
 -- Name: shorturls shorturls_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -141,7 +144,7 @@ ALTER TABLE ONLY public.shorturls
 
 
 --
--- TOC entry 3228 (class 2606 OID 16577)
+-- TOC entry 3233 (class 2606 OID 16628)
 -- Name: shorturls shorturls_shorturl_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -150,7 +153,7 @@ ALTER TABLE ONLY public.shorturls
 
 
 --
--- TOC entry 3222 (class 2606 OID 16555)
+-- TOC entry 3225 (class 2606 OID 16604)
 -- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -159,7 +162,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 3224 (class 2606 OID 16553)
+-- TOC entry 3227 (class 2606 OID 16602)
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -168,7 +171,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 3232 (class 2606 OID 16588)
+-- TOC entry 3234 (class 2606 OID 16611)
 -- Name: sessions sessions_userid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -177,7 +180,7 @@ ALTER TABLE ONLY public.sessions
 
 
 --
--- TOC entry 3231 (class 2606 OID 16578)
+-- TOC entry 3235 (class 2606 OID 16629)
 -- Name: shorturls shorturls_userid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -185,7 +188,7 @@ ALTER TABLE ONLY public.shorturls
     ADD CONSTRAINT shorturls_userid_fkey FOREIGN KEY (userid) REFERENCES public.users(id);
 
 
--- Completed on 2023-08-07 04:00:51 -03
+-- Completed on 2023-08-07 04:22:59 -03
 
 --
 -- PostgreSQL database dump complete

@@ -51,7 +51,7 @@ export async function Login(req,res) {
         WHERE userid = $2
         `, [token, userSearch.rows[0].id ]);
 
-        return res.status(200).send(token);
+        return res.status(200).send({token});
     } catch (error) {
         console.log(error);
         res.sendStatus(500);
